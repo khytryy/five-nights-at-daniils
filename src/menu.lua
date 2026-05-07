@@ -1,6 +1,8 @@
 require("src.assets")
 require("src.enums")
 
+require("src.globals")
+
 Menu = {}
 Menu.__index = Menu
 
@@ -9,6 +11,7 @@ function Menu:init()
 
     self.title_info = { love.graphics.newImage(Assets["menu_title"]), 70, 170}
     self.theme      = love.audio.newSource(Assets["menu_theme"], "stream")
+    self.selected   = 1
     return self
 end
 
@@ -22,9 +25,28 @@ function Menu:draw()
     local font = love.graphics.newFont(Assets["iom-bold"], 30)
     love.graphics.setFont(font)
 
-    love.graphics.print("NEW GAME", 1200, 313)
-    love.graphics.print("CONTINUE", 1200, 363)
-    love.graphics.print("OPTIONS", 1200, 413)
+    local font_height = font:getHeight()
+    local x = love.graphics.getWidth() / 1.4
+    local y = (love.graphics.getHeight() / 2) - (font_height * 3)
+
+    if self.selected == 1 then
+        love.graphics.print("NEW GAME <-", x, y + font_height)
+    else
+        love.graphics.print("NEW GAME", x, y + font_height)
+    end
+
+    if self.selected == 2 then
+        love.graphics.print("CONTINUE " .. tostring(Globals.night) .. " <-", x, y + font_height * 2)
+    else
+        love.graphics.print("CONTINUE " .. tostring(Globals.night), x, y + font_height * 2)
+    end
+    
+    if self.selected == 3 then
+        love.graphics.print("OPTIONS <-", x, y + font_height * 3)
+    else
+        love.graphics.print("OPTIONS", x, y + font_height * 3)
+    end
+
     love.graphics.setNewFont(15)
 end
 
