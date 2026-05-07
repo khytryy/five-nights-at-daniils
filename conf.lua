@@ -1,4 +1,7 @@
 function love.conf(t)
-    t.window_width  = 1920
-    t.window_height = 1080
+    t.window.width          = 1920
+    t.window.height         = 1080
+
+    t.window.fullscreen     = true
+    t.window.title          = "Five Nights At Daniil's"
 end
