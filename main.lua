@@ -1,41 +1,46 @@
 require("src.menu")
+require("src.globals")
+require("src.warning_screen")
+require("src.night_start")
 
-local menu
+
 local timer = 0
 local pressed = false
 
+local menu              = Menu:init()
+local warning_screen    = WarningScreen:init()
+
+Globals.scene_manager:add(Menu:init().scene)
+Globals.scene_manager:add(WarningScreen:init().scene)
+Globals.scene_manager:add(NightStart:init().scene)
+Globals.scene_manager:setCurrent(Enums.SCENE_WARNING)
+
 function love.load()
-    menu = Menu:init()
+    Globals.scene_manager:load()
+
 end
 
 function love.keyreleased(key, scancode)
     pressed = false
 end
 
+function love.keypressed(key, scancode, isrepeat)
+    if key == "escape" then
+        love.event.quit()
+    end
+
+    Globals.scene_manager:keypressed(key, scancode, isrepeat)
+end
+
 function love.update(dt)
     timer = timer + dt
-
-    if love.keyboard.isDown("escape") then
-        love.event.quit(0)
-    end
     
-    if love.keyboard.isDown("w") and not pressed then
-        pressed = true
-        menu.selected = menu.selected - 1
-        if menu.selected < 1 then menu.selected = 1 end
-
-    elseif love.keyboard.isDown("s") and not pressed then
-        pressed = true
-        menu.selected = menu.selected + 1
-        if menu.selected > 3 then menu.selected = 3 end
-    end
-
-    menu:update()
+    Globals.scene_manager:update(dt)
+    Globals.ost_manager:play()
 end
 
 function love.draw()
-    menu:draw()
-    love.graphics.print(menu.selected, 0, 0)
+    Globals.scene_manager:draw()
 end
 
 function love.quit()
